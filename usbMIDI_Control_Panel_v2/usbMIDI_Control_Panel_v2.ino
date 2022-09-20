@@ -13,22 +13,17 @@ const int ErrorBar = 4;
 
 //Button Constants
 const int PCF20Buttons[] = {0, 1, 2, 3, 4};
-const int PCF21Buttons[] = {0, 1, 2, 3, 4, 5, 6, 7};
 
 int PCF20LastState[sizeof(PCF20Buttons) / sizeof(int)];
-int PCF21LastState[sizeof(PCF21Buttons) / sizeof(int)];
 
 //LED Constants
 const int LEDPin = 6;
-const int NUMLEDS = (sizeof(PCF20Buttons) / sizeof(int)) + (sizeof(PCF21Buttons) / sizeof(int));
+const int NUMLEDS = (sizeof(PCF20Buttons) / sizeof(int));
 
 //Midi Constants
 const int FaderVolumeIndicatorID = 10;
 const int FaderMuteIndicatorID = 20;
 const int FaderAssignIndicator = 40;
-
-const int ControlButtonIndicatorID = 30;
-const int ControlButtonAssigbnIndicatorID = 50;
 
 bool FadersMuted[sizeof(PCF20Buttons) / sizeof(int)];
 bool FadersAssigned[sizeof(PCF20Buttons) / sizeof(int)];
@@ -36,13 +31,9 @@ bool FadersAssigned[sizeof(PCF20Buttons) / sizeof(int)];
 int FaderVolumeValue[sizeof(PCF20Buttons) / sizeof(int)];
 long FaderVolumeUpdateMillis[sizeof(PCF20Buttons) / sizeof(int)];
 
-int ControlButtonValues[sizeof(PCF21Buttons) / sizeof(int)];
-int ControlButtonsAssigned[sizeof(PCF21Buttons) / sizeof(int)];
-
 const int VolumeShowMillis = 1000;
 
 PCF8574 pcf20(0x20);
-PCF8574 pcf21(0x21);
 
 FastLED_NeoPixel<NUMLEDS, LEDPin, NEO_GRB> strip;
 
@@ -52,7 +43,6 @@ USBMIDI_CREATE_DEFAULT_INSTANCE();
 void setup() {
   Serial.begin(115200);
   pcf20.begin();
-  pcf21.begin();
   MIDI.begin(3);
 
   strip.begin();
@@ -64,13 +54,6 @@ void setup() {
     FadersAssigned[i] = false;
     FaderVolumeValue[i] = 0;
     FaderVolumeUpdateMillis[i] = 0;
-  }
-  
-  for (int i = 0; i < sizeof(PCF21Buttons) / sizeof(int); i++)
-  {
-    PCF21LastState[i] = 0;
-    ControlButtonValues[i] = 0;
-    ControlButtonsAssigned[i] = false;
   }
   
   for (int i = 0; i < sizeof(AnalogPins) / sizeof(int); i++)
@@ -112,16 +95,6 @@ void loop() {
       }
     }
     
-    for (int i = 0; i < sizeof(PCF21Buttons) / sizeof(int); i++)
-    {
-      int currentState2 =  1 - pcf21.readButton(PCF21Buttons[i]);
-      if(currentState2 != PCF21LastState[i])
-      {
-        MIDI.sendControlChange(i + 10, currentState2, 2);
-        PCF21LastState[i] = currentState2;
-      }
-    }
-    
     //update fader LEDs
     for(int i = 0; i < sizeof(PCF20Buttons) / sizeof(int); i++)
     {
@@ -155,26 +128,8 @@ void loop() {
         strip.setPixelColor(i, strip.Color(255, 0, 0));
       }
     }
-
-    for(int i = 0; i < sizeof(PCF21Buttons) / sizeof(int); i++)
-    {
-      int IDOffset = sizeof(PCF20Buttons) / sizeof(int);
-
-      switch(i)
-      {
-        default:
-          if(!ControlButtonsAssigned[i])
-            strip.setPixelColor(i + IDOffset, strip.Color(0, 0, 0)); 
-          else if(ControlButtonValues[i] == 0)
-            strip.setPixelColor(i + IDOffset, strip.Color(0, 255, 0));
-          else if(ControlButtonValues[i] > 0)
-            strip.setPixelColor(i + IDOffset, strip.Color(255, 0, 0));
-          break;
-      }
-    }
-    strip.show();
   }
-
+   
   if (MIDI.read())
   {
     switch(MIDI.getType())      // Get the type of the message we caught
@@ -198,20 +153,10 @@ void loop() {
             FadersMuted[LEDID] = !(MidiValue == 0);
             FaderVolumeUpdateMillis[LEDID] = currentMillis - VolumeShowMillis;
           }
-          else if(MidiControl - ControlButtonIndicatorID <= 9)
-          {
-            int LEDID = MidiControl - ControlButtonIndicatorID;
-            ControlButtonValues[LEDID] =  MidiValue;
-          }
           else if(MidiControl - FaderAssignIndicator <= 9)
           {
             int LEDID = MidiControl - FaderAssignIndicator;
             FadersAssigned[LEDID] =  !(MidiValue == 0);
-          }
-          else if(MidiControl - ControlButtonAssigbnIndicatorID <= 9)
-          {
-            int LEDID = MidiControl - ControlButtonAssigbnIndicatorID;
-            ControlButtonsAssigned[LEDID] =  !(MidiValue == 0);
           }
           
           break;
