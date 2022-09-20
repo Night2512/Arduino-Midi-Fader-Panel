@@ -5,7 +5,7 @@ The arduino code in the repository is designed to be used with the midi controll
 ![midi control panel image](README/midi-control-panel.jpg)
 
 ## Schematic
-![Full schematic 1](README/Schematic1.png)
+![Full schematic 1](README/Schematic-Fader.png)
 
 # Parts List
 - 5x [OUTEMU Blue](https://www.amazon.com/dp/B07V4S3QDK?psc=1&ref=ppx_yo2_dt_b_product_details) or other cherry compatible key switches
