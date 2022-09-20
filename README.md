@@ -1,6 +1,6 @@
-# Arduino-Midi-Control-Panel
+# Arduino-Midi-Fader-Panel
 
-The arduino code in the repository is designed to be used with the midi controller enclosure found [here](https://www.thingiverse.com/thing:5269219). The controller has 5 faders each with a mute button and an RGB LED, as well as 8 additional buttons with their own RGB LEDs. 
+The arduino code in the repository is designed to be used with the midi controller enclosure found [here](https://www.thingiverse.com/thing:5269219). The controller has 5 faders each with a mute button and an RGB LED. 
 
 ![midi control panel image](README/midi-control-panel.jpg)
 
@@ -8,10 +8,10 @@ The arduino code in the repository is designed to be used with the midi controll
 ![Full schematic 1](README/Schematic1.png)
 
 # Parts List
-- 13x [OUTEMU Blue](https://www.amazon.com/dp/B07V4S3QDK?psc=1&ref=ppx_yo2_dt_b_product_details) or other cherry compatible key switches
+- 5x [OUTEMU Blue](https://www.amazon.com/dp/B07V4S3QDK?psc=1&ref=ppx_yo2_dt_b_product_details) or other cherry compatible key switches
 - 5x [60mm linear potentiometer](https://www.amazon.com/dp/B07PNDLKQQ?psc=1&ref=ppx_yo2_dt_b_product_details)
-- 13x [ws2812b strip leds](https://www.amazon.com/gp/product/B088BGWL4J/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1) 100 leds/m is recommended 144 leds/m will probably also work
-- 2x [PCF8574T Digital IO expansion](https://www.amazon.com/dp/B07XD2K4GH?psc=1&ref=ppx_yo2_dt_b_product_details)
+- 5x [ws2812b strip leds](https://www.amazon.com/gp/product/B088BGWL4J/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1) 100 leds/m is recommended 144 leds/m will probably also work
+- 1x [PCF8574T Digital IO expansion](https://www.amazon.com/dp/B07XD2K4GH?psc=1&ref=ppx_yo2_dt_b_product_details)
 - 1x Arduino Leonardo
 - 1x [micro usb breakout](https://www.amazon.com/gp/product/B07W844N43/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)
 - 14x m3x8mm button head screws
@@ -36,7 +36,7 @@ I finished the soldering by tieing all of the grounds together and all of the 5v
 
 First the keyswitch plate gets screwed into the body using 4 m3 screws. Make sure non of the wires get caught between the keyswitch plate and the body or it might not sit flat or could cause electrical problems.
 
-Second the arduino and pcf8574s get plugged in and the bottom can be screwed in. at this point its probably good to plug it in and upload code to do asanity chec and make sure everything is working. 
+The bottom can be screwed in but at this point its probably good to plug it in and upload code to do a sanity chec and make sure everything is working. 
 
 Finally the keycap part 1s get inserted into the top plate and the top plate can be screwed into the body. Then the potentiometer caps can be added and everything should be done.
 
